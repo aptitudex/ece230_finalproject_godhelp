@@ -96,27 +96,27 @@ int writeMessage(const char* message, int msgLength) {
  *
  * Also writes to serial buffer for user input purposes.
  *
- * char* buf: Input buffer to write to.
+ * char* buff: Input buffer to write to.
  * int length: length of buffer to fill to.
  *
  * returns number of filled chars.
  */
-int getString(char* buf, int length) {
+int getString(char* buff, int length) {
     int i = 0;
     for(; (i < length); i++) {
         while(RXLength == 0){
             __no_operation();
         } // Wait for something to populate buffer.
 
-        buf[i] = InBuffer[RXIndex];
+        buff[i] = InBuffer[RXIndex];
         RXIndex = (RXIndex + 1) % RXSize; // Walk up buffer.
         RXLength--;
 
-        if(buf[i] == '\0') break;
+        if(buff[i] == '\0') break;
 
     }
     i++;
-    buf[i] = '\0';
+    buff[i] = '\0';
     return i;
 }
 
@@ -124,16 +124,16 @@ int getString(char* buf, int length) {
  * Get an N-Length string of length N
  * Warning: Blocking
  *
- * char* buf: Input buffer to write to.
+ * char* buff: Input buffer to write to.
  * int length: length of buffer to fill to.
  *
  */
-void fillBuffer(char* buf, int length) {
+void fillBuffer(char* buff, int length) {
     int i = 0;
     for(; (i < length); i++) {
         while(RXLength == 0){__no_operation();} // Wait for length
 
-        buf[i] = InBuffer[RXIndex];
+        buff[i] = InBuffer[RXIndex];
         RXIndex = RXIndex + 1 % RXSize; // Walk up buffer.
         RXLength--;
 
