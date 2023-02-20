@@ -290,16 +290,16 @@ char request[7];
 void main(void)
 {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
-    configRTC(); // config RTC
+//    configRTC(); // config RTC
     initSerial();
-    initKeypad();
-    RGBLED_init();
-    RGBLED_setColor(PURPLE);
+//    initKeypad();
+//    RGBLED_init();
+//    RGBLED_setColor(PURPLE);
 
    while (1) {
        getString(request, 6);
        request[0] = 'b';
-       RGBLED_setColor(CYAN);
+//       RGBLED_setColor(CYAN);
    }
 }
 
