@@ -51,3 +51,12 @@ Module.symvers
 Mkfile.old
 dkms.conf
 /Debug/*
+Debug/
+Debug/ccsObjs.opt
+Debug/god_help_linkInfo.xml
+Debug/makefile
+Debug/objects.mk
+Debug/sources.mk
+Debug/subdir_rules.mk
+Debug/subdir_vars.mk
+*.launch
