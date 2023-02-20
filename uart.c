@@ -99,20 +99,13 @@ int writeMessage(const char* message, int msgLength) {
 int getString(char* buf, int length) {
     int i = 0;
     for(; (i < length); i++) {
-        while(RXLength == 0){__no_operation();} // Wait for length
+        while(RXLength == 0){
+            __no_operation();
+        } // Wait for something to populate buffer.
 
         buf[i] = InBuffer[RXIndex];
-        RXIndex = RXIndex + 1 % RXSize; // Walk up buffer.
+        RXIndex = (RXIndex + 1) % RXSize; // Walk up buffer.
         RXLength--;
-
-        switch(InBuffer[RXIndex]) {
-        case 8: //Handle Backspace
-            break;
-        case '\r':
-            break;
-        default://TODO Reimplement string
-
-        }
 
         if(buf[i] == '\0') break;
 
@@ -173,12 +166,10 @@ void EUSCIA2_IRQHandler(void)
     {
         // Note that reading RX buffer clears the flag
         int digit = EUSCIMOD->RXBUF;
-        int rxIdx = (RXIndex + RXTempLength) % RXSize;
+        int rxIdx = (RXIndex + RXLength) % RXSize;
         InBuffer[rxIdx] = (char) digit;
 
         RXLength++;
-
-
     }
     // Check if transmit flag is set (value ready in RX buffer)
     if (EUSCIMOD->IFG & EUSCI_A_IFG_TXIFG)
