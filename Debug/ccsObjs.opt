@@ -1,0 +1,10 @@
+"./csHFX.obj"
+"./keypad.obj"
+"./main.obj"
+"./rgbLED.obj"
+"./sha1.obj"
+"./startup_msp432p4111_ccs.obj"
+"./system_msp432p4111.obj"
+"./uart.obj"
+"../msp432p4111.cmd"
+-llibc.a
