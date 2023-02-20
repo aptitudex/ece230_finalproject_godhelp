@@ -2,15 +2,9 @@
 #include "uart.h"
 #include "string.h"
 
-#ifdef USB
-    #define UARTPORT P1
-    #define EUSCIMOD EUSCI_A0
-    #define EUSCI_IRQ EUSCIA0_IRQn
-#else
-    #define UARTPORT P3
-    #define EUSCIMOD EUSCI_A2
-    #define EUSCI_IRQ EUSCIA2_IRQn
-#endif
+#define UARTPORT P3
+#define EUSCIMOD EUSCI_A2
+#define EUSCI_IRQ EUSCIA2_IRQn
 
 
 void initSerial() {
@@ -50,7 +44,7 @@ void initSerial() {
     EUSCIMOD->CTLW0 |= EUSCI_A_CTLW0_SWRST; // Put eUSCI in reset
     //EUSCI_A0->CTLW0 = EUSCI_A_CTLW0_SWRST ; // Remain eUSCI in reset
     // complete configuration of UART in eUSCI_A0 control register
-    EUSCIMOD->CTLW0 |= EUSCI_A_CTLW0_PEN + EUSCI_A_CTLW0_PAR + EUSCI_A_CTLW0_SSEL__SMCLK;
+    EUSCIMOD->CTLW0 |= EUSCI_A_CTLW0_PAR + EUSCI_A_CTLW0_SSEL__SMCLK;
 
     /* Baud Rate calculation
      * Refer to Section 24.3.10 of Technical Reference manual
@@ -62,11 +56,11 @@ void initSerial() {
      * N = 12e6/38400
      */
     // set clock prescaler in eUSCI_AX baud rate control register
-    EUSCIMOD->BRW = 19;
+    EUSCIMOD->BRW = 78;
 
     //  configure baud clock modulation in eUSCI_A0 modulation control register
-    EUSCIMOD->MCTLW |= (0x65<<EUSCI_A_MCTLW_BRS_OFS);
-    EUSCIMOD->MCTLW |= (8<<EUSCI_A_MCTLW_BRF_OFS);
+    EUSCIMOD->MCTLW |= (0x0<<EUSCI_A_MCTLW_BRS_OFS);
+    EUSCIMOD->MCTLW |= (2<<EUSCI_A_MCTLW_BRF_OFS);
     EUSCIMOD->MCTLW |= BIT0;
 
 
@@ -102,27 +96,27 @@ int writeMessage(const char* message, int msgLength) {
  *
  * Also writes to serial buffer for user input purposes.
  *
- * char* buf: Input buffer to write to.
+ * char* buff: Input buffer to write to.
  * int length: length of buffer to fill to.
  *
  * returns number of filled chars.
  */
-int getString(char* buf, int length) {
+int getString(char* buff, int length) {
     int i = 0;
     for(; (i < length); i++) {
         while(RXLength == 0){
             __no_operation();
         } // Wait for something to populate buffer.
 
-        buf[i] = InBuffer[RXIndex];
+        buff[i] = InBuffer[RXIndex];
         RXIndex = (RXIndex + 1) % RXSize; // Walk up buffer.
         RXLength--;
 
-        if(buf[i] == '\0') break;
+        if(buff[i] == '\0') break;
 
     }
     i++;
-    buf[i] = '\0';
+    buff[i] = '\0';
     return i;
 }
 
@@ -130,16 +124,16 @@ int getString(char* buf, int length) {
  * Get an N-Length string of length N
  * Warning: Blocking
  *
- * char* buf: Input buffer to write to.
+ * char* buff: Input buffer to write to.
  * int length: length of buffer to fill to.
  *
  */
-void fillBuffer(char* buf, int length) {
+void fillBuffer(char* buff, int length) {
     int i = 0;
     for(; (i < length); i++) {
         while(RXLength == 0){__no_operation();} // Wait for length
 
-        buf[i] = InBuffer[RXIndex];
+        buff[i] = InBuffer[RXIndex];
         RXIndex = RXIndex + 1 % RXSize; // Walk up buffer.
         RXLength--;
 
@@ -166,11 +160,8 @@ int printMessage(const char* message, int msgLength) {
 }
 
 // UART interrupt service routine
-#ifdef USB
-void EUSCIA0_IRQHandler(void)
-#else
 void EUSCIA2_IRQHandler(void)
-#endif
+
 {
     // Check if receive flag is set (value ready in RX buffer)
     if (EUSCIMOD->IFG & EUSCI_A_IFG_RXIFG)
@@ -179,8 +170,8 @@ void EUSCIA2_IRQHandler(void)
         int digit = EUSCIMOD->RXBUF;
         int rxIdx = (RXIndex + RXLength) % RXSize;
         InBuffer[rxIdx] = (char) digit;
-
         RXLength++;
+
     }
     // Check if transmit flag is set (value ready in RX buffer)
     if (EUSCIMOD->IFG & EUSCI_A_IFG_TXIFG)
