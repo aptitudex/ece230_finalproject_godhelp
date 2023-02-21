@@ -166,13 +166,6 @@ void configAESAccel(void) {
 }
 
 void configRTC(void) {
-//   //  real-time clock BCD select
-//    RTC_C->CTL13 |= RTC_C_CTL13_BCD;
-//    //RTC_C->CTL13 |= RTC_C_CTL13_CALF0; //for cal if necessary later
-//    // real-time clock ready interrupt enable
-//    RTC_C->CTL0 = (RTC_C->CTL0 & ~RTC_C_CTL0_KEY_MASK) | RTC_C_KEY;
-//    RTC_C->CTL13 &= ~RTC_C_CTL13_HOLD;
-//    //RTC_C->CTL0 &= ~RTC_C_KEY;
 
     RTC_C->CTL0 = (RTC_C->CTL0 & ~RTC_C_CTL0_KEY_MASK) | RTC_C_KEY;
     BITBAND_PERI(RTC_C->CTL13, RTC_C_CTL13_HOLD_OFS) = 0;
@@ -192,50 +185,21 @@ void configRTC(void) {
     //  real-time clock BCD select
     // RTC_C->CTL13 |= RTC_C_CTL13_BCD;
 
+
+
    configLFXT();
+   configHFXT(); // smclk = 48Mhz/128
+
+   TIMER_A0->CTL |= TIMER_A_CTL_SSEL__SMCLK + TIMER_A_CTL_ID__8 + TIMER_A_CTL_IE;
+   TIMER_A0->CCR[0] = 46875; // Repeat every 1 sec.
+   //Purposely not turning on Timer a0 because we don't need it to check hash.
+
 }
 
 
 void doRTC() {
-    // EVERYTHING IN BCD FORMAT
-    // assign to vars
-    // TODO: Uhhh... it's possible some of these are flipped around... hope not, though.
     while (!RTC_C_CTL0_RDYIFG) {__no_operation();}
 
-//    seconds = RTC_C_BCD -> TIM0 & 0b11111111;
-//    //round to nearest 10
-//    //seconds = log10(seconds);
-//    float secondsfloat = pow(10, seconds);
-//    seconds = ceil(seconds/secondsfloat)*secondsfloat;
-//    minutes = RTC_C_BCD -> TIM0 & 0b1111111100000000;
-//    minutes = minutes >> 8;
-//    dayofweek = RTC_C_BCD -> TIM1 & 0b111;
-//    hour = RTC_C_BCD -> TIM1 & 0b1111111100000000;
-//    hour = hour >> 8;
-//    day = RTC_C_BCD -> DATE & 0b11111111;
-//    month = RTC_C_BCD -> DATE & 0b1111111100000000;
-//    month = month >> 8;
-//    year = RTC_C_BCD -> YEAR;
-//
-//    // reformat
-//    secondshigh = seconds >> 4;
-//    secondslow = seconds & 0b1111;
-//
-//    minhigh = minutes >> 4;
-//    minlow = minutes & 0b1111;
-//
-//    hourhigh = hour >> 4;
-//    hourlow = hour & 0b1111;
-//
-//    dayhigh = day >> 4;
-//    daylow = day & 0b1111;
-//    monthhigh = day >> 4;
-//    monthlow = day & 0b1111;
-//
-//    yearcenturyhigh = year >> 12;
-//    yearcenturylow = (year >> 8) & 0b1111;
-//    yeardecade = (year >> 4) & 0b1111;
-//    yearlowest = year & 0b1111;
     minutes = (RTC_C->TIM0 & RTC_C_TIM0_MIN_MASK)>>RTC_C_TIM0_MIN_OFS;
     seconds = RTC_C->TIM0 & RTC_C_TIM0_SEC_MASK;
     hour = RTC_C->TIM1 & RTC_C_TIM1_HOUR_MASK;
@@ -312,6 +276,7 @@ void main(void)
    hashRTC();
    RGBLED_setColor(YELLOW);
    int i = 0;
+   TIMER_A0->CTL |= TIMER_A_CTL_MC__UP;
    while (1) {
        char curKeyInput = getKey();
        if (i < 4) {
@@ -338,15 +303,9 @@ void main(void)
        __no_operation();
    }
 }
-//
-//void RTCRDY_IRQHandler(void)
-//{
-//    if (hashTime == TRUE) {
-//        hashRTC();
-//    }
-//}
 
 
-//void TA0_0_IRQHandler(void) {
-
-//}
+void TA0_0_IRQHandler(void) {
+    TIMER_A0->CTL &= ~TIMER_A_CTL_IFG;
+    hashRTC();
+}

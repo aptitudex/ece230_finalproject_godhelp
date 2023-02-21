@@ -42,10 +42,6 @@ void configLFXT(void)
     } while ((SYSCTL_A->NMI_CTLSTAT & SYSCTL_A_NMI_CTLSTAT_CS_FLG)
             || (CS->IFG & CS_IFG_LFXTIFG)); // Test LFXT oscillator fault flag
 
-    /* Select clock source for ACLK = LFXT, no divider */
-    CS->CTL1 = (CS->CTL1 & ~(CS_CTL1_SELA_MASK | CS_CTL1_DIVA_MASK))
-                            | CS_CTL1_SELA__LFXTCLK     // select source LFXTCLK
-                            | CS_CTL1_DIVA__1;          // set divider /1
 
     CS->KEY = 0;                        // Lock CS module from unintended accesses
 
