@@ -198,6 +198,7 @@ void configRTC(void) {
    TIMER_A0->CTL |= TIMER_A_CTL_SSEL__SMCLK + TIMER_A_CTL_ID__8 + TIMER_A_CTL_IE;
    TIMER_A0->CCR[0] = 46875; // Repeat every 1 sec.
    //Purposely not turning on Timer a0 because we don't need it to check hash.
+   NVIC_EnableIRQ(TA0_0_IRQn);
 
 }
 
