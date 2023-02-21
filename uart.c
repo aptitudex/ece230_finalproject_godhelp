@@ -112,7 +112,7 @@ int getString(char* buff, int length) {
         RXIndex = (RXIndex + 1) % RXSize; // Walk up buffer.
         RXLength--;
 
-        if(buff[i] == '\0') break;
+        //if(buff[i] == '\0') break;
 
     }
     i++;

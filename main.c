@@ -313,7 +313,9 @@ void sendHash() {
 
 
 char request[7];
+char reqotp[6];
 char timereq[7] = "timerq";
+char rqotp[6] = "rqotp";
 
 void main(void)
 {
@@ -336,6 +338,18 @@ void main(void)
            doRTC();
            printMessage(buf, n);
        }
+       i = 0;
+       succ = 1;
+       getString(reqotp, 5);
+       for(; (i < 6) && (succ); i++) {
+           succ = reqotp[i] == rqotp[i];
+       }
+       if (succ) {
+           RGBLED_setColor(WHITE);
+           break;
+       }
+
+
    }
 }
 //
