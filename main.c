@@ -355,25 +355,27 @@ void main(void)
    // HashRTC call (sub-calls OTPgen)
    hashRTC();
    RGBLED_setColor(YELLOW);
+   int i = 0;
    while (1) {
-       int i = 0;
        char curKeyInput = getKey();
        if (i < 4) {
            if(otp[i] == curKeyInput) {
-               RGBLED_toggleGreen();
+               RGBLED_setColor(WHITE);
                i++;
            } else if ((curKeyInput != ' ') && (i != 0)) {
-               i--;
+               RGBLED_setColor(RED);
+               i = 0;
            }
        } else if (i == 4) {
-           RGBLED_setColor(YELLOW);
-          char authmsg[6] = "auth\n";
-          printMessage(authmsg, 6);
+          break;
        }
        int k = 0;
-       for (k = 0; k < 150000; k++);
+       for (k = 0; k < 200000; k++);
 
    }
+   char authmsg[6] = "auth\n";
+   printMessage(authmsg, 6);
+   RGBLED_setColor(GREEN);
 
    while (1) {
        // don't touch this
