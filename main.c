@@ -31,7 +31,7 @@ char otp[4];
  */
 SHA1_CTX sha;
 char results[20];
-char buf[23];
+char buf[19];
 char* recbuf;
 int n;
 uint16_t seconds; uint16_t minutes; uint16_t hour; uint16_t dayofweek; uint16_t month; uint16_t day; uint16_t year;
@@ -42,6 +42,8 @@ char hourhigh; char hourlow;
 char dayhigh; char daylow;
 char monthhigh; char monthlow;
 char dow; // day of week
+
+int count = 0;
 
 // LE EPIC ENCRYPTION KEEEEEEEEEYYYYYYYYYYYYYYYYYYYY
 char* key;
@@ -196,7 +198,8 @@ void configRTC(void) {
    configHFXT(); // smclk = 48Mhz/128
 
    TIMER_A0->CTL |= TIMER_A_CTL_SSEL__SMCLK + TIMER_A_CTL_ID__8 + TIMER_A_CTL_IE;
-   TIMER_A0->CCR[0] = 46875; // Repeat every 1 sec.
+   TIMER_A0->CCTL[0] |= TIMER_A_CCTLN_CCIE;
+   TIMER_A0->CCR[0] = 65535; // Repeat every 1 sec.
    //Purposely not turning on Timer a0 because we don't need it to check hash.
    NVIC_EnableIRQ(TA0_0_IRQn);
 
@@ -214,14 +217,12 @@ void doRTC() {
     year = RTC_C->YEAR;
 
 
-    n = sprintf(buf, "%02d,%02d,%02d,%02d,%02d,%02d", minutes, seconds, hour, day, month, year);
+    n = sprintf(buf, "%02d,%02d,%02d,%02d,%02d,%02d", seconds, minutes, hour, day, month, year);
 }
 
 void hashRTC()
 {
     doRTC();
-    // seconds,minutes,hours,dow,day,mon,year
-    //n = sprintf(buf, "%02d%02d,%02d%02d,%02d%02d,%02d%02d,%02d%02d,%02d%02d%02d%02d", secondshigh, "0", minhigh, minlow, hourhigh, hourlow, dayhigh, daylow, monthhigh, monthlow, yearcenturyhigh, yearcenturylow, yeardecade, yearlowest) + 1;
     buf[1] = '0';
     SHA1Init(&sha);
     SHA1Update(&sha, (uint8_t *)buf, n);
@@ -334,6 +335,10 @@ void main(void)
 
 
 void TA0_0_IRQHandler(void) {
-    TIMER_A0->CTL &= ~TIMER_A_CTL_IFG;
-    hashRTC();
+    if(count == 0){
+        hashRTC();
+    }
+    count = count + 1 % 5;
+    TIMER_A0->CCTL[0] &= ~TIMER_A_CCTLN_CCIFG;
+
 }

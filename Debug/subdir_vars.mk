@@ -10,6 +10,7 @@ CMD_SRCS += \
 
 C_SRCS += \
 ../csHFX.c \
+../csLFXT.c \
 ../keypad.c \
 ../main.c \
 ../rgbLED.c \
@@ -20,6 +21,7 @@ C_SRCS += \
 
 C_DEPS += \
 ./csHFX.d \
+./csLFXT.d \
 ./keypad.d \
 ./main.d \
 ./rgbLED.d \
@@ -30,6 +32,7 @@ C_DEPS += \
 
 OBJS += \
 ./csHFX.obj \
+./csLFXT.obj \
 ./keypad.obj \
 ./main.obj \
 ./rgbLED.obj \
@@ -40,6 +43,7 @@ OBJS += \
 
 OBJS__QUOTED += \
 "csHFX.obj" \
+"csLFXT.obj" \
 "keypad.obj" \
 "main.obj" \
 "rgbLED.obj" \
@@ -50,6 +54,7 @@ OBJS__QUOTED += \
 
 C_DEPS__QUOTED += \
 "csHFX.d" \
+"csLFXT.d" \
 "keypad.d" \
 "main.d" \
 "rgbLED.d" \
@@ -60,6 +65,7 @@ C_DEPS__QUOTED += \
 
 C_SRCS__QUOTED += \
 "../csHFX.c" \
+"../csLFXT.c" \
 "../keypad.c" \
 "../main.c" \
 "../rgbLED.c" \

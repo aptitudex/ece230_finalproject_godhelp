@@ -1,4 +1,5 @@
 "./csHFX.obj"
+"./csLFXT.obj"
 "./keypad.obj"
 "./main.obj"
 "./rgbLED.obj"

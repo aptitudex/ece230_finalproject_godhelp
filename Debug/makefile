@@ -4,13 +4,14 @@
 
 SHELL = cmd.exe
 
-CG_TOOL_ROOT := C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS
+CG_TOOL_ROOT := C:/ti/ccs1220/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS
 
 GEN_OPTS__FLAG := 
 GEN_CMDS__FLAG := 
 
 ORDERED_OBJS += \
 "./csHFX.obj" \
+"./csLFXT.obj" \
 "./keypad.obj" \
 "./main.obj" \
 "./rgbLED.obj" \
@@ -141,15 +142,15 @@ all: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 god_help.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: Arm Linker'
-	"C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --advice:power=all --define=__MSP432P4111__ --define=ccs -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"god_help.map" --heap_size=1024 --stack_size=512 -i"C:/ti/ccs1210/ccs/ccs_base/arm/include" -i"C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/lib" -i"C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="god_help_linkInfo.xml" --rom_model -o "god_help.out" $(ORDERED_OBJS)
+	"C:/ti/ccs1220/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --advice:power=all --define=__MSP432P4111__ --define=ccs -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"god_help.map" --heap_size=1024 --stack_size=512 -i"C:/ti/ccs1220/ccs/ccs_base/arm/include" -i"C:/ti/ccs1220/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/lib" -i"C:/ti/ccs1220/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="god_help_linkInfo.xml" --rom_model -o "god_help.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
 # Other Targets
 clean:
 	-$(RM) $(EXE_OUTPUTS__QUOTED)
-	-$(RM) "csHFX.obj" "keypad.obj" "main.obj" "rgbLED.obj" "sha1.obj" "startup_msp432p4111_ccs.obj" "system_msp432p4111.obj" "uart.obj" 
-	-$(RM) "csHFX.d" "keypad.d" "main.d" "rgbLED.d" "sha1.d" "startup_msp432p4111_ccs.d" "system_msp432p4111.d" "uart.d" 
+	-$(RM) "csHFX.obj" "csLFXT.obj" "keypad.obj" "main.obj" "rgbLED.obj" "sha1.obj" "startup_msp432p4111_ccs.obj" "system_msp432p4111.obj" "uart.obj" 
+	-$(RM) "csHFX.d" "csLFXT.d" "keypad.d" "main.d" "rgbLED.d" "sha1.d" "startup_msp432p4111_ccs.d" "system_msp432p4111.d" "uart.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 
