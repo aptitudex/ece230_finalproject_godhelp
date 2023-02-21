@@ -269,40 +269,6 @@ void hashRTC()
     otpGen();
 }
 
-
-void handleKeypad(void) {
-    uint8_t inputnum = 0;
-    char currentInput = getKey();
-    if (inputnum != 3) {
-        if ((currentInput != ' ') & (currentInput != 'A') & (currentInput != 'B')
-                & (currentInput != 'C') & (currentInput != 'D') & (currentInput != '#') & (currentInput != '*')) {
-            if (currentInput == otp[inputnum]) {
-                inputnum++;
-                ledYellow();
-            } else {
-                if (inputnum != 0) {
-                    inputnum--;
-                }
-                ledRed();
-            }
-        }
-    } else {
-        ledGreen();
-    }
-}
-
-void ledGreen() {
-    RGBLED_setColor(GREEN);
-}
-
-void ledYellow() {
-    RGBLED_setColor(YELLOW);
-}
-
-void ledRed() {
-    RGBLED_setColor(RED);
-}
-
 void recieveHash() {
     fillBuffer(recbuf, 19);
 }
