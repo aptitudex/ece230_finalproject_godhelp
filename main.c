@@ -337,19 +337,22 @@ void main(void)
            RGBLED_setColor(CYAN);
            doRTC();
            printMessage(buf, n);
+           continue;
        }
        i = 0;
-       succ = 1;
-       fillBuffer(reqotp, 6);
-       for(; (i < 7) && (succ); i++) {
-           succ = reqotp[i] == rqotp[i];
+       int test = 1;
+
+       for(; (i < 7) && (test); i++) {
+           test = request[i] == rqotp[i];
        }
-       if (succ) {
+       if (test) {
            RGBLED_setColor(WHITE);
            break;
        }
 
-
+   }
+   while (1) {
+       // don't touch this
    }
 }
 //
