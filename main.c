@@ -191,18 +191,7 @@ void configRTC(void) {
     //  real-time clock BCD select
     // RTC_C->CTL13 |= RTC_C_CTL13_BCD;
 
-
-    // TODO: do we need to configure BCLK? test first.
-//    CS_startLFXT(false);
-//    RTC_C_initCalendar(&currentTime, RTC_C_FORMAT_BCD);
-//
-//    MAP_RTC_C_clearInterruptFlag(
-//            RTC_C_CLOCK_READ_READY_INTERRUPT);
-//    MAP_RTC_C_enableInterrupt(
-//            RTC_C_CLOCK_READ_READY_INTERRUPT);
-//
-//    MAP_RTC_C_startClock();
-//    MAP_Interrupt_enableInterrupt(INT_RTC_C);
+    ROM_CS_startLFXT(0);
 }
 
 
