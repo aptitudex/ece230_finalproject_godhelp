@@ -64,7 +64,7 @@ uint8_t hashTime = FALSE;
 void otpGen() {
     int i = 0;
     for (i = 0; i < 4; i++) {
-        otp[i] = results[i] % 10;
+        otp[i] = results[i] % 10 + 48;
     }
 }
 
@@ -351,8 +351,33 @@ void main(void)
        }
 
    }
+
+   // HashRTC call (sub-calls OTPgen)
+   hashRTC();
+   RGBLED_setColor(YELLOW);
+   while (1) {
+       int i = 0;
+       char curKeyInput = getKey();
+       if (i < 4) {
+           if(otp[i] == curKeyInput) {
+               RGBLED_toggleGreen();
+               i++;
+           } else if ((curKeyInput != ' ') && (i != 0)) {
+               i--;
+           }
+       } else if (i == 4) {
+           RGBLED_setColor(YELLOW);
+          char authmsg[6] = "auth\n";
+          printMessage(authmsg, 6);
+       }
+       int k = 0;
+       for (k = 0; k < 150000; k++);
+
+   }
+
    while (1) {
        // don't touch this
+       __no_operation();
    }
 }
 //
