@@ -159,10 +159,15 @@ void configAESAccel(void) {
              "Never gonna make you cry"
              "Never gonna say goodbye"
              "Never gonna tell a lie and hurt you";
-     n = strlen(key);
-     SHA1Init(&sha);
-     SHA1Update(&sha, key, n);
-     SHA1Final(keyhash, &sha);
+//     n = strlen(key);
+//     SHA1Init(&sha);
+//     SHA1Update(&sha, key, n);
+//     SHA1Final(keyhash, &sha);
+
+     AES256->CTL0 |= AES256_CTL0_KL0; // select 128 key length
+     AES256->CTL0 |= AES256_CTL0_CM1; // select cbc mode
+
+
 }
 
 void configRTC(void) {
@@ -332,6 +337,26 @@ void main(void)
    char authmsg[6] = "auth\n";
    printMessage(authmsg, 6);
    RGBLED_setColor(GREEN);
+
+   char reccolor[2];
+   while(1) {
+       fillBuffer(reccolor, 1);
+       if (reccolor[0] == '1') {
+           RGBLED_setColor(RED);
+       } else if (reccolor[0] == '2') {
+           RGBLED_setColor(GREEN);
+       } else if (reccolor[0] == '3') {
+           RGBLED_setColor(YELLOW);
+       } else if (reccolor[0] == '4') {
+           RGBLED_setColor(BLUE);
+       } else if (reccolor[0] == '5') {
+           RGBLED_setColor(PURPLE);
+       } else if (reccolor[0] == '6') {
+           RGBLED_setColor(CYAN);
+       } else {
+           RGBLED_setColor(WHITE);
+       }
+   }
 
    while (1) {
        // don't touch this
