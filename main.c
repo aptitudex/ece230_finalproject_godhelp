@@ -299,6 +299,7 @@ void main(void)
        for (k = 0; k < 200000; k++);
 
    }
+   TIMER_A0->CTL &= ~TIMER_A_CTL_MC_MASK;
    char authmsg[6] = "auth\n";
    printMessage(authmsg, 6);
    RGBLED_setColor(GREEN);
