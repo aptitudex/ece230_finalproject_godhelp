@@ -117,9 +117,9 @@ void configAESAccel(void) {
              "You might also like"
              "Whopper Whopper"
              "Burger King"
-             "Did you know that thereÅfs a tunnel under Ocean Blvd"
+             "Did you know that thereÔøΩfs a tunnel under Ocean Blvd"
              "Lana Del Rey"
-             "CreepinÅf"
+             "CreepinÔøΩf"
              "Metro Boomin, The Weeknd & 21 Savage"
              "[Post-Chorus]"
              "Ooh (Give you up)"
@@ -315,7 +315,7 @@ void sendHash() {
 char request[7];
 char reqotp[6];
 char timereq[7] = "timerq";
-char rqotp[6] = "rqotp";
+char rqotp[7] = "reqotp";
 
 void main(void)
 {
@@ -327,7 +327,7 @@ void main(void)
     RGBLED_setColor(PURPLE);
 
    while (1) {
-       getString(request, 6);
+       fillBuffer(request, 6);
        int succ = 1;
        int i = 0;
        for(; (i < 7) && (succ); i++) {
@@ -340,8 +340,8 @@ void main(void)
        }
        i = 0;
        succ = 1;
-       getString(reqotp, 5);
-       for(; (i < 6) && (succ); i++) {
+       fillBuffer(reqotp, 6);
+       for(; (i < 7) && (succ); i++) {
            succ = reqotp[i] == rqotp[i];
        }
        if (succ) {
