@@ -3,6 +3,7 @@
 #include "sha1.h"
 #include "keypad.h"
 #include "rgbLED.h"
+#include "csLFXT.h"
 //#include "interrupt.h"
 //#include "sysctl.h"
 #include <string.h>
@@ -191,7 +192,7 @@ void configRTC(void) {
     //  real-time clock BCD select
     // RTC_C->CTL13 |= RTC_C_CTL13_BCD;
 
-    ROM_CS_startLFXT(0);
+   configLFXT();
 }
 
 
