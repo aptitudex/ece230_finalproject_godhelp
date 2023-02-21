@@ -338,7 +338,7 @@ void TA0_0_IRQHandler(void) {
     if(count == 0){
         hashRTC();
     }
-    count = count + 1 % 5;
+    count = (count + 1) % 5;
     TIMER_A0->CCTL[0] &= ~TIMER_A_CCTLN_CCIFG;
 
 }
