@@ -251,6 +251,7 @@ void main(void)
     RGBLED_init();
     RGBLED_setColor(PURPLE);
 
+    __enable_interrupts();
    while (1) {
        fillBuffer(request, 6);
        int succ = 1;
